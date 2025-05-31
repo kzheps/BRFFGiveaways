@@ -7,7 +7,7 @@ import './index.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/">
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/overlay" element={<OBSOverlay />} />
