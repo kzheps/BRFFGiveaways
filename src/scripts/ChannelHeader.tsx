@@ -10,7 +10,7 @@ const ChannelHeader: React.FC<ChannelHeaderProps> = ({ channelName }) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText('https://twitch.tv');
+    navigator.clipboard.writeText('https://twitch.tv/OBSOverlay');
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
