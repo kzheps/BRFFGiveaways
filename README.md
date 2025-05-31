@@ -2,7 +2,7 @@
   <img src="https://i.imgur.com/Vscjy0a.png" />
 </p>
 
-# B2T2 Theme
+# BRFF Giveaways
 > Dekstop-App for [Bratishkinoff](https://twitch.tv/bratishkinoff/) by @kzheps
 
 [![Version](https://img.shields.io/badge/1.0.0-pdw?style=for-the-badge&logoColor=white&logoSize=amd&label=release&labelColor=black&color=gray)](https://twitch.tv/bratishkinoff/) 
