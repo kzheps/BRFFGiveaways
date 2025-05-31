@@ -1,12 +1,12 @@
 import React from 'react';
 import { useGiveaway } from './hooks/useGiveaway';
 import { useTwitchChat } from './hooks/useTwitchChat';
-import ChannelHeader from './components/ChannelHeader';
-import GiveawayTimer from './components/GiveawayTimer';
-import KeywordDisplay from './components/KeywordDisplay';
-import ParticipantsList from './components/ParticipantsList';
-import WinnerDisplay from './components/WinnerDisplay';
-import GiveawayControls from './components/GiveawayControls';
+import ChannelHeader from './scripts/ChannelHeader';
+import GiveawayTimer from './scripts/GiveawayTimer';
+import KeywordDisplay from './scripts/KeywordDisplay';
+import ParticipantsList from './scripts/ParticipantsList';
+import WinnerDisplay from './scripts/WinnerDisplay';
+import GiveawayControls from './scripts/GiveawayControls';
 import { Rocket } from 'lucide-react';
 import { cn } from './utils/cn';
 
@@ -27,7 +27,7 @@ function GiveawayApp() {
   useTwitchChat(channelName, addParticipantFromChat);
 
   return (
-    <div className="min-h-screen bg-monkey-bg text-monkey-text">
+    <div className="min-h-screen bg-monkey-bg text-monkey-text font-mono">
       <ChannelHeader channelName={channelName} />
 
       <main className="container mx-auto px-4 py-6 max-w-7xl">

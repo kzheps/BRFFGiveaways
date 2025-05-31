@@ -8,12 +8,6 @@
   }
 }
 
-@layer components {
-  body {
-    @apply antialiased bg-monkey-bg text-monkey-text font-mono;
-  }
-}
-
 @layer utilities {
   .custom-scrollbar {
     scrollbar-width: thin;
@@ -22,18 +16,6 @@
 
   .custom-scrollbar::-webkit-scrollbar {
     width: 8px;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-track {
-    @apply bg-monkey-hover rounded-full;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-monkey-sub rounded-full;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    @apply bg-monkey-text;
   }
 
   .animate-fadeIn {

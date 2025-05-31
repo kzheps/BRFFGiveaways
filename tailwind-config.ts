@@ -23,5 +23,5 @@ export default {
       sans: ["Roboto", "sans-serif"],
     },
   },
-  plugins: [require('tailwindcss-motion')],
+  plugins: [],
 }
