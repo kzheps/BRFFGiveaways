@@ -38,6 +38,8 @@ function GiveawayApp() {
                 endTime={endTime}
                 isActive={state.status === 'active'}
                 onTimerEnd={handleTimerEnd}
+                status={state.status}
+                drawWinner={drawWinner}
               />
               <KeywordDisplay
                 keyword={state.keyword}

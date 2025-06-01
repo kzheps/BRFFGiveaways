@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Twitch, Copy } from 'lucide-react';
 import { cn } from '../utils/cn';
+import uebotprime from '../assets/icons/uebotprime.svg';
 
 interface ChannelHeaderProps {
   channelName?: string;
@@ -17,16 +18,17 @@ const ChannelHeader: React.FC<ChannelHeaderProps> = ({ channelName }) => {
 
   return (
     <header className={cn(
-      "sticky top-0 z-10 py-4 px-6 sm:px-8",
-      "bg-[url('/src/assets/uebotprime.jpg')]",
-      "border-b border-slate-200 dark:border-slate-800",
+      "sticky top-0 z-10 py-4 px-6 sm:px-8 bg-no-repeat bg-cover bg-center",
+      "border-b border-slate-800 transition-colors duration-300",
       "transition-colors duration-300"
-    )}>
+    )}
+    style={{ backgroundImage: `url(${uebotprime})` }}
+  >
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <div className="group flex flex-col items-start relative">
             <h1 className="text-xl font-bold text-slate-900 dark:text-white transition-all duration-300 ease-in-out translate-y-1 group-hover:-translate-y-1">
-              <span className="hidden sm:inline mr-2">BRFF LOVE IS ROLTON!</span>
+              <span className="hidden sm:inline mr-2">РАЗДАЧА НА СПАВНЕ ЗАЛУПЫ!</span>
             </h1>
             <p className="text-xs text-slate-500 dark:text-slate-400 hidden sm:block opacity-0 max-h-0 translate-y-2 group-hover:opacity-100 group-hover:max-h-20 group-hover:translate-y-0 transition-all duration-300 delay-150 ease-in-out overflow-hidden shadow-md rounded-md px-2 py-1 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
               — Как бы тут раздаривают фары с ролтоном
