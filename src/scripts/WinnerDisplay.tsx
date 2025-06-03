@@ -1,116 +1,143 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './UI/Card';
-import { Crown, MessageSquare } from 'lucide-react';
-import { Winner } from '../types';
-import { cn } from '../utils/cn';
-import Confetti from 'react-confetti';
+import React, { useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useGiveawayStore } from '../store/giveawayStore';
 
-interface WinnerDisplayProps {
-  winner: Winner | null;
-}
+import { ExternalLink, Clock } from 'lucide-react';
+import confetti from 'canvas-confetti';
+import useSound from 'use-sound';
+import Refreshh from '../assets/icons/refresh.svg?react';
+import WINBOT from '../assets/icons/award.svg?react';
+import Feedback from '../assets/icons/feedback.svg?react';
+import MOD from '../assets/icons/moderator.svg?react';
+import VIP from '../assets/icons/vip.svg?react';
+import SUB from '../assets/icons/subscriber.svg?react';
 
-const WinnerDisplay: React.FC<WinnerDisplayProps> = ({ winner }) => {
-  const [showConfetti, setShowConfetti] = useState(false);
-  const [windowDimensions, setWindowDimensions] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
+const WinnerDisplay: React.FC = () => {
+  const { winner, selectWinner } = useGiveawayStore();
+  const [playWinSound] = useSound('./assets/sound/brffwinner.mp3');
 
   useEffect(() => {
     if (winner) {
-      setShowConfetti(true);
-      const timer = setTimeout(() => {
-        setShowConfetti(false);
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [winner]);
+      playWinSound();
 
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight,
+      const colors = ['#9146FF', '#F0F4FF', '#6B21A8', '#D8B4FE', '#4C1D95'];
+      confetti({
+        particleCount: 300,
+        angle: 90,
+        spread: 120,
+        origin: { x: 0.5, y: 0 },
+        colors,
+        gravity: 1.0,
+        ticks: 500,
+        scalar: 1.2
       });
-    };
+    }
+  }, [winner, playWinSound]);
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  if (!winner) return null;
+
+  const formatTime = (timestamp: number) => {
+    const date = new Date(timestamp);
+    const moscowTime = new Date(date.getTime() + (3 * 60 * 60 * 1000));
+    return moscowTime.toLocaleTimeString('ru-RU', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      timeZone: 'UTC'
+    });
+  };
 
   return (
-    <>
-      {showConfetti && (
-        <Confetti
-          width={windowDimensions.width}
-          height={windowDimensions.height}
-          recycle={false}
-          numberOfPieces={500}
-          gravity={0.1}
-          colors={['#9146FF', '#F0F4FF', '#6B21A8', '#D8B4FE', '#4C1D95']}
-        />
-      )}
+    <AnimatePresence mode="wait">
 
-      <Card className={cn(
-        "w-full transition-all duration-500",
-        winner ? "border-2 border-purple-500 shadow-lg" : ""
-      )}>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-lg font-medium">ПОБЕДИТЕЛЬ</CardTitle>
-          <Crown className={cn(
-            "h-5 w-5 transition-colors duration-300",
-            winner ? "text-yellow-500" : "text-slate-400"
-          )} />
-        </CardHeader>
-        <CardContent>
-          {winner ? (
-            <div className="space-y-4">
-              <div className={cn(
-                "flex items-center justify-center p-4",
-                "bg-gradient-to-r from-purple-500 to-purple-700 rounded-lg",
-                "animate-fadeInScale"
-              )}>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-white mb-1">
-                    {winner.displayName}
-                  </div>
-                  <div className="text-sm text-purple-200">
-                    @{winner.username}
-                  </div>
-                </div>
-              </div>
+      {winner && (
+        <motion.div
+          onClick={selectWinner}
+          className="bg-[#1c1c1f] rounded-lg overflow-hidden shadow-lg mb-6 border-2 border-purple-500"
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: -20 }}
+        transition={{
+          duration: 0.4,
+          type: "spring",
+          stiffness: 80
+        }}
+       >
+       <motion.div
+          className="bg-gradient-to-r from-[#6441a5] to-[#9146ff] p-4"
+          initial={{ y: -50 }}
+          animate={{ y: 0 }}
+          transition={{ delay: 0.2, type: "spring" }}
+      >
+          <div className="flex items-center justify-center">
+            <WINBOT className="h-8 w-8 text-[#e7e7e7] mr-2" />
+            <h2 className="text-2xl font-bold text-[#e7e7e7]">ПОБЕДИТЕЛЬ!</h2>
 
-              <div className="space-y-2">
-                <div className="flex items-center">
-                  <MessageSquare className="h-4 w-4 text-purple-500 mr-2" />
-                  <span className="text-sm font-medium">Сообщения</span>
-                </div>
+            <motion.button onClick={() => selectWinner()} className="ml-4 text-[#e7e7e7] hover:text-purple-200 transition-colors" whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} title="Переизбрать победителя">
+              <Refreshh className="h-5 w-5" />
+            </motion.button>
+          </div>
+        </motion.div>
 
-                <div className="space-y-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
-                  {winner.messages.map((message) => (
-                    <div
-                      key={message.id}
-                      className="p-2 rounded bg-slate-50 dark:bg-slate-800 text-sm animate-fadeIn"
-                    >
-                      <div className="text-slate-900 dark:text-slate-100">
-                        {message.content}
-                      </div>
-                      <div className="text-xs text-slate-500 mt-1">
-                        {new Date(message.timestamp).toLocaleTimeString()}
-                      </div>
+        <div className="p-6">
+          <motion.div
+            className="flex items-center justify-center mb-4"
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.4 }}
+          >
+            <div className="flex items-center space-x-2">
+              {winner.isModerator ? (
+                <MOD className="h-6 w-6 text-green-400" />
+              ) : winner.isVIP ? (
+                <VIP className="h-6 w-6 text-purple-400" />
+              ) : winner.isSubscriber ? (
+                <SUB className="h-6 w-6 text-yellow-400" />
+              ) : null}
+              <h3 className="text-3xl font-bold text-[#e7e7e7]">{winner.displayName}</h3>
+              <motion.a
+                href={`https://twitch.tv/${winner.username}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-purple-400 hover:text-purple-300 transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <ExternalLink className="h-5 w-5" />
+              </motion.a>
+            </div>
+          </motion.div>
+
+          <div className="mt-6">
+            <div className="flex items-center text-[#e7e7e7] mb-2">
+              <Feedback className="h-5 w-5 text-purple-400 mr-2" />
+              <h4 className="font-medium">Сообщения</h4>
+            </div>
+
+            <div className="space-y-2 mt-3">
+              {winner.recentMessages.map((message, index) => (
+                <motion.div
+                  key={index}
+                  className="bg-[#1a1a1a] p-3 rounded-lg"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.5 + (index * 0.1) }}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <p className="text-[#e7e7e7] break-words">{message}</p>
+                    <div className="flex items-center text-xs text-[#3a3a3c] ml-2">
+                      <Clock className="h-3 w-3 mr-1" />
+                      <span>{formatTime(winner.timestamp)}</span>
                     </div>
-                  ))}
-                </div>
-              </div>
+                  </div>
+                </motion.div>
+              ))}
             </div>
-          ) : (
-            <div className="flex items-center justify-center h-40 text-slate-400 dark:text-slate-600">
-              Не вычислен счастливчик из чата
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </>
+          </div>
+        </div>
+      </motion.div>
+    )}
+    </AnimatePresence>
   );
 };
 

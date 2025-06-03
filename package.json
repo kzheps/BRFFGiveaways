@@ -1,33 +1,47 @@
 {
-  "name": "BRFF Giveaways",
+  "name": "brff-app",
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "main": "src/main/main.js",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "start": "electron .",
+    "build": "vite build && electron-builder",
+    "postinstall": "electron-builder install-app-deps",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
     "@tanstack/react-virtual": "^3.13.9",
+    "canvas-confetti": "^1.9.2",
     "clsx": "^2.1.0",
     "date-fns": "^3.3.1",
+    "framer-motion": "^11.0.8",
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",
     "react-confetti": "^6.1.0",
+    "react-countdown": "^2.3.5",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.6.1",
+    "react-virtualized": "^9.22.5",
     "tailwind-merge": "^2.2.1",
     "tmi.js": "^1.8.5",
-    "uuid": "^11.1.0"
+    "use-sound": "^4.0.1",
+    "uuid": "^11.1.0",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
+    "@types/canvas-confetti": "^1.6.4",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
+    "@types/react-virtualized": "^9.21.29",
+    "@types/tmi.js": "^1.8.6",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.18",
+    "electron": "^30.0.0",
+    "electron-builder": "^26.0.12",
     "eslint": "^9.9.1",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.11",
@@ -38,5 +52,26 @@
     "typescript-eslint": "^8.3.0",
     "vite": "^5.4.2",
     "vite-plugin-svgr": "^4.3.0"
+  },
+  "build": {
+    "appId": "com.brff.giveaways",
+    "productName": "BRFF Giveaways",
+    "files": [
+      "dist/**/*",
+      "src/main/main.js",
+      "src/main/preload.js",
+      "package.json"
+    ],
+    "directories": {
+      "output": "build"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true
+    }
   }
 }

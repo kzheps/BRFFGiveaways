@@ -1,45 +1,61 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import tmi from 'tmi.js';
+import { useGiveawayStore } from '../store/giveawayStore';
+import { Participant } from '../types';
 
-export interface ChatUser {
-  username: string;
-  displayName: string;
-  isSubscriber: boolean;
-  isMod: boolean;
-  isVip: boolean;
-  message: string;
-}
+export const useTwitchChat = () => {
+  const clientRef = useRef<tmi.Client | null>(null);
+  const {
+    isActive,
+    keyword,
+    addParticipant,
+    winner,
+    updateWinnerMessages
+  } = useGiveawayStore();
 
-export function useTwitchChat(
-  channel: string,
-  onMessage: (user: ChatUser) => void
-) {
   useEffect(() => {
-    if (!channel) return;
-
     const client = new tmi.Client({
-      options: { debug: false },
-      connection: { reconnect: true, secure: true },
-      channels: [channel],
+      channels: ['bratishkinoff']
     });
 
-    client.connect();
+    client.connect().catch(console.error);
+    clientRef.current = client;
 
-    client.on('message', (_, userstate, message) => {
-      const user: ChatUser = {
-        username: userstate.username || '',
-        displayName: userstate['display-name'] || userstate.username || '',
-        isSubscriber: !!userstate.subscriber,
-        isMod: !!userstate.mod,
-        isVip: userstate.badges?.vip === '1',
-        message,
-      };
+    client.on('message', (channel, tags, message, self) => {
+      if (self) return;
 
-      onMessage(user);
+      const username = tags.username || '';
+      const displayName = tags['display-name'] || username;
+
+      if (winner && winner.username === username) {
+        updateWinnerMessages(username, message);
+        return;
+      }
+
+      if (isActive && message.trim().toLowerCase() === keyword.toLowerCase()) {
+        const participant: Participant = {
+          id: tags.id || '',
+          username,
+          displayName,
+          message,
+          timestamp: Date.now(),
+          isSubscriber: !!tags.subscriber,
+          isVIP: !!tags.vip,
+          isModerator: !!tags.mod,
+          badges: tags.badges || {}
+        };
+
+        addParticipant(participant);
+      }
     });
 
     return () => {
-      client.disconnect();
+      if (clientRef.current) {
+        clientRef.current.disconnect();
+        clientRef.current = null;
+      }
     };
-  }, [channel, onMessage]);
-}
+  }, [isActive, keyword, winner, addParticipant, updateWinnerMessages]);
+
+  return { client: clientRef.current };
+};

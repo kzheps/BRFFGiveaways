@@ -1,86 +1,99 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/Card';
-import { cn } from '../utils/cn';
-import { Key } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { useGiveawayStore } from '../store/giveawayStore';
 
-interface KeywordDisplayProps {
-  keyword: string;
-  isActive: boolean;
-}
+import { Clock } from 'lucide-react';
+import Key from '../assets/icons/warning.svg?react';
 
-const KeywordDisplay: React.FC<KeywordDisplayProps> = ({ keyword, isActive }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const [isCopied, setIsCopied] = useState(false);
+const KeywordInput: React.FC = () => {
+  const {
+    keyword,
+    setKeyword,
+    duration,
+    setDuration,
+    isActive,
+    startGiveaway,
+    endGiveaway,
+    selectWinner
+  } = useGiveawayStore();
 
-  useEffect(() => {
+  const [keywordInput, setKeywordInput] = useState(keyword);
+  const [durationInput, setDurationInput] = useState(Math.floor(duration / 1000 / 60));
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     if (!isActive) {
-      setIsVisible(false);
-      return;
+      setKeyword(keywordInput);
+      setDuration(durationInput * 60 * 1000);
+      startGiveaway();
+    } else {
+      endGiveaway();
+      selectWinner();
     }
-
-    const timeout = setTimeout(() => {
-      setIsVisible(true);
-    }, 500);
-
-    return () => clearTimeout(timeout);
-  }, [isActive]);
-
-  const handleCopyClick = () => {
-    navigator.clipboard.writeText(keyword);
-    setIsCopied(true);
-    setTimeout(() => setIsCopied(false), 2000);
   };
 
+  if (isActive) return null;
+
   return (
-    <Card className="w-full overflow-hidden">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-lg font-medium">КЛЮЧЕВОЕ СЛОВО</CardTitle>
-        <Key className="h-5 w-5 text-purple-500" />
-      </CardHeader>
-      <CardContent>
-        {isActive ? (
-          <div className="flex flex-col items-center space-y-3">
-            <div
-              className={cn(
-                "transition-all duration-500 transform",
-                isVisible
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 -translate-y-4"
-              )}
-            >
-              <div className="bg-slate-100 dark:bg-slate-800 p-3 rounded-md flex items-center justify-center">
-                <span className="text-2xl font-bold text-purple-600 dark:text-purple-400 tracking-wider">
-                  {keyword}
-                </span>
-              </div>
-            </div>
-            <p className={cn(
-              "text-sm text-center text-slate-500 dark:text-slate-400 transition-opacity duration-300",
-              isVisible ? "opacity-100" : "opacity-0"
-            )}>
-              Введите это ключевое слово в чате, чтобы принять участие в розыгрыше
-            </p>
-            <button
-              onClick={handleCopyClick}
-              className={cn(
-                "text-sm px-3 py-1 rounded bg-purple-100 text-purple-700 hover:bg-purple-200",
-                "dark:bg-purple-900 dark:text-purple-100 dark:hover:bg-purple-800",
-                "transition-all duration-200",
-                isVisible ? "opacity-100" : "opacity-0",
-                isCopied && "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-100"
-              )}
-            >
-              {isCopied ? "Скопировано!" : "Копировать в буфер обмена"}
-            </button>
-          </div>
-        ) : (
-          <div className="flex items-center justify-center h-20 text-slate-400 dark:text-slate-600">
-            Нет заданного слова
-          </div>
-        )}
-      </CardContent>
-    </Card>
+    <motion.div
+      className="bg-[#1c1c1f] rounded-lg p-6 shadow-lg border border-[#3a3a3c]"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label
+            htmlFor="keyword"
+            className="block text-[#e7e7e7] text-sm font-medium mb-2 flex items-center"
+          >
+            <Key className="h-4 w-4 mr-2 text-[#e7e7e7]" />
+            Ключевое слово
+          </label>
+          <motion.input
+            type="text"
+            id="keyword"
+            placeholder="Введите ключевое слово!"
+            value={keywordInput}
+            onChange={(e) => setKeywordInput(e.target.value)}
+            className="w-full bg-[#1a1a1a] rounded-md border-[#3a3a3c] text-[#e7e7e7] px-4 py-2 focus:ring-purple-500 focus:border-purple-500 placeholder:text-[#3a3a3c] placeholder:text-sm"
+            whileFocus={{ scale: 1.01 }}
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <label
+            htmlFor="duration"
+            className="block text-[#e7e7e7] text-sm font-medium mb-2 flex items-center"
+          >
+            <Clock className="h-4 w-4 mr-2 text-[#e7e7e7]" />
+            Продолжительность (В минутах)
+          </label>
+          <motion.input
+            type="number"
+            id="duration"
+            min="1"
+            max="60"
+            value={durationInput}
+            onChange={(e) => setDurationInput(parseInt(e.target.value))}
+            className="w-full bg-[#1a1a1a] rounded-md border-[#3a3a3c] text-[#e7e7e7] px-4 py-2 focus:ring-purple-500 focus:border-purple-500"
+            whileFocus={{ scale: 1.01 }}
+            required
+          />
+        </div>
+
+        <motion.button
+          type="submit"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="w-full py-2 px-4 rounded-md font-medium text-[#e7e7e7] bg-[#3a3a3c] hover:bg-[#1a1a1a] transition-colors duration-200 border border-[#3a3a3c]"
+        >
+          Начать розыгрыш
+        </motion.button>
+      </form>
+    </motion.div>
   );
 };
 
-export default KeywordDisplay;
+export default KeywordInput;
