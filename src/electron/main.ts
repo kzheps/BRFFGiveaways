@@ -14,12 +14,23 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
+      devTools: isDev,
     },
     autoHideMenuBar: true,
     show: false,
     backgroundColor: '#0f0f0f'
   });
 
+  if (!isDev) {
+      mainWindow.webContents.openDevTools = () => {
+        console.warn('Attempt to open DevTools blocked in production');
+      };
+
+      mainWindow.webContents.on('devtools-opened', () => {
+        console.warn('DevTools opened in production, closing...');
+        mainWindow.webContents.closeDevTools();
+      });
+    }
   const filePath = path.join(__dirname, '../dist/index.html');
   console.log('Trying to load:', filePath);
 
@@ -40,13 +51,13 @@ function createWindow() {
     mainWindow.show();
   });
 
-  mainWindow.webContents.openDevTools();
+  const loadPromise = isDev
+    ? mainWindow.loadURL('http://localhost:5173')
+    : mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
 
-  if (isDev) {
-    mainWindow.loadURL('http://localhost:5173');
-  } else {
-    mainWindow.loadURL(`file://${path.join(__dirname, '../dist/index.html')}`);
-  }
+  loadPromise.catch(err => {
+    console.error('Window load error:', err);
+  });
 
   mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL) => {
     console.error(`Failed to load: ${validatedURL} - ${errorDescription} (${errorCode})`);

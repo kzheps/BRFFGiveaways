@@ -34,7 +34,7 @@ const SettingsToggle: React.FC = () => {
               : 'border-[#3a3a3c] bg-[#1c1c1f] text-[#3a3a3c]'
           } ${isActive ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
-          <Users className="h-6 w-6 mb-2" />
+          <Users className="h-4 w-4 mb-2" />
           <span className="font-medium">Для всех желающих</span>
         </motion.div>
 
@@ -48,7 +48,11 @@ const SettingsToggle: React.FC = () => {
               : 'border-[#3a3a3c] bg-[#1c1c1f] text-[#3a3a3c]'
           } ${isActive ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
-          <SUB className="h-6 w-6 mb-2" />
+          <SUB className={`h-6 w-6 mb-2 transition-all duration-200 ${
+            participationMode === 'subscribers'
+              ? 'filter-none'
+              : 'brightness-50'
+          }`} />
           <span className="font-medium">Только Subscribers</span>
         </motion.div>
       </div>
