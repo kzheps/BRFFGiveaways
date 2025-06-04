@@ -19,10 +19,10 @@ const Footer: React.FC = () => {
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
-            <a href="https://boosty.to/kzheps" target="_blank" rel="noopener noreferrer" className="text-brff-main hover:text-brff-text transition-colors duration-200 flex items-center space-x-2">
+            <a href="https://boosty.to/kzheps" target="_blank" rel="noopener noreferrer" className="text-[#3a3a3c] hover:text-brff-text transition-colors duration-200 flex items-center space-x-2">
               Created by
-              <span className="font-bold mx-1 text-purple-400">KZHEPS</span>
-              <BoostyLogo className="w-4 h-4 animate-float" />
+              <span className="font-bold mx-1 text-[#e7e7e7]">KZHEPS</span>
+              <BoostyLogo className="w-4 h-4 animate-float bg-[#3a3a3c]" />
             </a>
           </motion.div>
 

@@ -28,16 +28,20 @@ export const useTwitchChat = () => {
       const displayName = tags['display-name'] || username;
 
       if (winner && winner.username === username) {
-        updateWinnerMessages(username, message);
+        const filteredMessage = message.toLowerCase() === keyword.toLowerCase()
+          ? 'АЛО, ЭТО 322, РЕРОЛЛ БЫСТРЕЕ, ЭТО БОТЫ!'
+          : message;
+        updateWinnerMessages(username, filteredMessage);
         return;
       }
+
 
       if (isActive && message.trim().toLowerCase() === keyword.toLowerCase()) {
         const participant: Participant = {
           id: tags.id || '',
           username,
           displayName,
-          message,
+          message: '',
           timestamp: Date.now(),
           isSubscriber: !!tags.subscriber,
           isVIP: !!tags.vip,

@@ -4,7 +4,6 @@ import { useGiveawayStore } from '../store/giveawayStore';
 
 import { ExternalLink, Clock } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import useSound from 'use-sound';
 import Refreshh from '../assets/icons/refresh.svg?react';
 import WINBOT from '../assets/icons/award.svg?react';
 import Feedback from '../assets/icons/feedback.svg?react';
@@ -14,11 +13,9 @@ import SUB from '../assets/icons/subscriber.svg?react';
 
 const WinnerDisplay: React.FC = () => {
   const { winner, selectWinner } = useGiveawayStore();
-  const [playWinSound] = useSound('./assets/sound/brffwinner.mp3');
 
   useEffect(() => {
     if (winner) {
-      playWinSound();
 
       const colors = ['#9146FF', '#F0F4FF', '#6B21A8', '#D8B4FE', '#4C1D95'];
       confetti({
@@ -32,7 +29,7 @@ const WinnerDisplay: React.FC = () => {
         scalar: 1.2
       });
     }
-  }, [winner, playWinSound]);
+  }, [winner]);
 
   if (!winner) return null;
 

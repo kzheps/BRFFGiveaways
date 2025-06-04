@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => {
         build({
           entryPoints: ['src/electron/main.ts'],
           bundle: true,
-          outfile: 'dist/electron/main.cjs',
+          outfile: 'dist-electron/main.cjs',
           platform: 'node',
           target: 'node16',
           format: 'cjs',
@@ -54,8 +54,10 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       outDir: 'dist',
+      assetsDir: '.',
       sourcemap: env.NODE_ENV !== 'production',
       minify: 'terser',
+      target: 'esnext',
       chunkSizeWarningLimit: 1600,
       rollupOptions: {
         output: {

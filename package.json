@@ -5,15 +5,16 @@
   "description": "brff app boo",
   "type": "module",
   "author": "KZHEPS",
-  "main": "dist/electron/main.cjs",
+  "main": "dist-electron/main.cjs",
   "scripts": {
     "dev": "vite",
-    "start": "electron .",
+    "start": "npm run build:main && electron .",
     "build": "vite build && electron-builder",
+    "build:main": "esbuild src/electron/main.ts --bundle --platform=node --target=node16 --outfile=dist-electron/main.cjs --format=cjs --external:electron",
     "postinstall": "electron-builder install-app-deps",
     "electron": "wait-on tcp:5173 && electron .",
     "electron:dev": "concurrently -k \"npm run dev\" \"npm run electron\"",
-    "electron:build": "vite build && electron-builder",
+    "electron:build": "npm run build:main && vite build && electron-builder",
     "type-check": "tsc --noEmit",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -80,6 +81,7 @@
     "files": [
       "dist/**/*",
       "!dist/**/*.map",
+      "dist-electron/main.cjs",
       "electron/**/*",
       "package.json"
     ],
