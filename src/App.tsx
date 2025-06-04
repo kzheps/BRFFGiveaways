@@ -33,8 +33,8 @@ function App() {
             ) : (
               <>
                 <div className="flex-grow px-4 py-8 w-full space-y-6">
-                    <KeywordDisplay />
-                    <GiveawayControls />
+                    <KeywordInput />
+                    <SettingsToggle />
                 </div>
               </>
             )}

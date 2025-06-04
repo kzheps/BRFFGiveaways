@@ -14,7 +14,10 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    "types": ["node", "electron"],
+    "typeRoots": ["./node_modules/@types", "./types"]
   },
-  "include": ["vite.config.ts"]
+  "include": ["src/main", "vite.config.ts", "electron.d.ts"]
 }

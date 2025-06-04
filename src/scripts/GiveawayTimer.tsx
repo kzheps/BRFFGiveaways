@@ -12,6 +12,16 @@ const GiveawayTimer: React.FC = () => {
   const [isNearEnd, setIsNearEnd] = useState<boolean>(false);
 
   useEffect(() => {
+  window.electronAPI?.receive('giveaway-ended', (message: string) => {
+    console.log(message);
+  });
+
+  return () => {
+    window.electronAPI?.receive('giveaway-ended', () => {});
+  };
+}, []);
+
+  useEffect(() => {
     if (!isActive || !endTime) return;
 
     const calculateTimeLeft = () => {
@@ -24,17 +34,8 @@ const GiveawayTimer: React.FC = () => {
       return difference;
     };
 
-    useEffect(() => {
-    window.electronAPI?.receive('giveaway-ended', (message: string) => {
-      console.log(message);
-    });
-
-    return () => {
-      window.electronAPI?.receive('giveaway-ended', () => {});
-    };
-  }, []);
-
     setTimeLeft(calculateTimeLeft());
+
     const timer = setInterval(() => {
       const newTimeLeft = calculateTimeLeft();
       setTimeLeft(newTimeLeft);
