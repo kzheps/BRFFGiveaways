@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-2 md:mb-0">
-            <span className="font-mono text-sm text-[#3a3a3c]">Version 0.1.0Beta</span>
+            <span className="font-mono text-sm text-[#3a3a3c]">Version 0.1.1Beta</span>
           </div>
 
           <motion.div
@@ -19,7 +19,7 @@ const Footer: React.FC = () => {
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
-            <a href="https://boosty.to/kzheps" target="_blank" rel="noopener noreferrer" className="group font-mono text-[#3a3a3c] hover:text-brff-text transition-colors duration-200 flex items-center justify-center">
+            <a href="https://boosty.to/kzheps" target="_blank" rel="noopener noreferrer" className="group font-mono text-[#3a3a3c] transition-colors duration-200 flex items-center justify-center">
               Created by
               <span className="font-italic mx-1 text-purple-500 group-hover:text-purple-400 text-sm md:text-base relative">
                 KZHEPS

@@ -21,6 +21,7 @@ const initialState: GiveawayState = {
   endTime: null,
   duration: 60 * 1000, // 1 min
   participationMode: 'all',
+  hasWinnerBeenSelected: false,
 };
 
 export const useGiveawayStore = create<GiveawayStore>((set, get) => ({
@@ -71,7 +72,7 @@ export const useGiveawayStore = create<GiveawayStore>((set, get) => ({
       recentMessages: [selectedParticipant.message]
     };
 
-    set({ winner, isActive: false });
+    set({ winner, isActive: false, hasWinnerBeenSelected: true });
   },
 
   updateWinnerMessages: (username, message) => {

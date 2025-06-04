@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { shell } from 'electron';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGiveawayStore } from '../store/giveawayStore';
 
@@ -49,7 +50,6 @@ const WinnerDisplay: React.FC = () => {
 
       {winner && (
         <motion.div
-          onClick={selectWinner}
           className="bg-[#1c1c1f] rounded-lg overflow-hidden shadow-lg mb-6 border-2 border-purple-500"
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -93,14 +93,16 @@ const WinnerDisplay: React.FC = () => {
               ) : null}
               <h3 className="text-3xl font-bold text-[#e7e7e7]">{winner.displayName}</h3>
               <motion.a
-                href={`https://twitch.tv/${winner.username}`}
+                href="#"
+                onClick={(e) => {e.preventDefault(); shell.openExternal(`https://twitch.tv/${winner.username}`)}}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-purple-400 hover:text-purple-300 transition-colors"
+                title="Twitch-Канал"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
-                <ExternalLink className="h-5 w-5" />
+                <ExternalLink className="h-5 w-5 cursor-pointer" />
               </motion.a>
             </div>
           </motion.div>

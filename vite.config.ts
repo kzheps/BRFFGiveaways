@@ -58,6 +58,9 @@ export default defineConfig(({ mode }) => {
       sourcemap: env.NODE_ENV !== 'production',
       minify: 'terser',
       target: 'esnext',
+      commonjsOptions: {
+      include: [/node_modules/],
+      },
       chunkSizeWarningLimit: 1600,
       rollupOptions: {
         output: {
@@ -77,7 +80,8 @@ export default defineConfig(({ mode }) => {
         'tmi.js',
         '@tanstack/react-virtual',
         'canvas-confetti',
-        'lucide-react'
+        'lucide-react',
+        'react-virtualized'
       ],
       exclude: [],
     },

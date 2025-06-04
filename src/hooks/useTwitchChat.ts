@@ -41,7 +41,7 @@ export const useTwitchChat = () => {
           id: tags.id || '',
           username,
           displayName,
-          message: '',
+          message: 'АЛО, ЭТО 322, РЕРОЛЛ БЫСТРЕЕ, ЭТО БОТЫ!',
           timestamp: Date.now(),
           isSubscriber: !!tags.subscriber,
           isVIP: !!tags.vip,

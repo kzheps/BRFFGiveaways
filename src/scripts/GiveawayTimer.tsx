@@ -7,7 +7,7 @@ import Timer from '../assets/icons/hourglass.svg?react';
 import Outcomes from '@/assets/icons/outcomes.svg?react';
 
 const GiveawayTimer: React.FC = () => {
-  const { isActive, endTime, endGiveaway, selectWinner, keyword, participationMode } = useGiveawayStore();
+  const { isActive, endTime, endGiveaway, selectWinner, keyword, participationMode, winner } = useGiveawayStore();
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [isNearEnd, setIsNearEnd] = useState<boolean>(false);
 
@@ -28,6 +28,8 @@ const GiveawayTimer: React.FC = () => {
       const difference = endTime - Date.now();
       if (difference <= 0) {
         endGiveaway();
+        selectWinner();
+        window.electronAPI?.send('end-giveaway', null);
         return 0;
       }
       setIsNearEnd(difference <= 10000);

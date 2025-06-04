@@ -78,7 +78,7 @@
   },
   "build": {
     "appId": "com.brff.giveaways",
-    "productName": "BRFF Giveaways",
+    "productName": "BRFF-Giveaways",
     "files": [
       "dist/**/*",
       "!dist/**/*.map",

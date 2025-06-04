@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, shell } from 'electron';
 import path from 'node:path';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -21,6 +21,11 @@ function createWindow() {
     backgroundColor: '#0f0f0f'
   });
 
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url);
+    return { action: 'deny' };
+  });
+
   if (!isDev) {
       mainWindow.webContents.openDevTools = () => {
         console.warn('Attempt to open DevTools blocked in production');
@@ -31,6 +36,7 @@ function createWindow() {
         mainWindow.webContents.closeDevTools();
       });
     }
+
   const filePath = path.join(__dirname, '../dist/index.html');
   console.log('Trying to load:', filePath);
 
@@ -41,7 +47,7 @@ function createWindow() {
         'Content-Security-Policy': [
           isDev
             ? "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; connect-src * wss://irc-ws.chat.twitch.tv"
-            : "default-src 'self' 'unsafe-inline'; media-src 'self'; img-src 'self' https://i.imgur.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' wss://irc-ws.chat.twitch.tv"
+            : "default-src 'self' 'unsafe-inline'; media-src 'self'; img-src 'self' https://i.imgur.com; connect-src 'self' https://twitch.tv; connect-src 'self' https://boosty.to; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' wss://irc-ws.chat.twitch.tv"
         ],
       },
     });
